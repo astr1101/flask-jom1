@@ -106,7 +106,7 @@ def get_closest_capitals():
     query = (f"SELECT * FROM country WHERE country='{random_country}'")
     cursor.execute(query)
     for (test) in cursor:   
-        smallest.prepend(test[1],test[2])
+        smallest.insert(0,(test[1],test[2]))
     print(sort(smallest)[:num_results])
     return (jsonify(sort(smallest)[:num_results]))
 
