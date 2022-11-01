@@ -32,7 +32,10 @@ def get_closest_capitals():
 #/closest_capitals/?country=&results=1
     the_country=request.args.get("country", default="", type=str)
     num_results=request.args.get("results", default="", type=str)
-    
+    if(num_results==""):
+        num_results=5
+    if(num_results!=""):
+        num_results=int(num_results)
     list_of_countries=[]
 
     cnx = mysql.connector.connect(user='root', database='railway', host='containers-us-west-30.railway.app', password='uRmUBE9EPeW2Q73NQWgm', port='6811')
@@ -95,12 +98,13 @@ def get_closest_capitals():
       the_distance=distance(float(country_from_lat), float(country_to_lat), float(country_from_lon), float(country_to_lon))
       smallest.append((test,the_distance))
       #print(test_2)
-    print((sort(smallest)[0][0][1],sort(smallest)[0][0][2], sort(smallest)[0][1]))
-    print((sort(smallest)[1][0][1],sort(smallest)[1][0][2], sort(smallest)[1][1]))
-    print((sort(smallest)[2][0][1],sort(smallest)[2][0][2], sort(smallest)[2][1]))
-    print((sort(smallest)[3][0][1],sort(smallest)[3][0][2], sort(smallest)[3][1]))
-    print((sort(smallest)[4][0][1],sort(smallest)[4][0][2], sort(smallest)[4][1]))
-    return (jsonify(sort(smallest)[:5]))
+    #print((sort(smallest)[0][0][1],sort(smallest)[0][0][2], sort(smallest)[0][1]))
+    #print((sort(smallest)[1][0][1],sort(smallest)[1][0][2], sort(smallest)[1][1]))
+    #print((sort(smallest)[2][0][1],sort(smallest)[2][0][2], sort(smallest)[2][1]))
+    #print((sort(smallest)[3][0][1],sort(smallest)[3][0][2], sort(smallest)[3][1]))
+    #print((sort(smallest)[4][0][1],sort(smallest)[4][0][2], sort(smallest)[4][1]))
+    print(sort(smallest)[:num_results])
+    return (jsonify(sort(smallest)[:num_results]))
 
 
 
