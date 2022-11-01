@@ -104,7 +104,7 @@ def get_closest_capitals():
     #print((sort(smallest)[3][0][1],sort(smallest)[3][0][2], sort(smallest)[3][1]))
     #print((sort(smallest)[4][0][1],sort(smallest)[4][0][2], sort(smallest)[4][1]))
     
-    sorted_list=sort(smallest)[:num_results])
+    sorted_list=sort(smallest)[:num_results]
     query = (f"SELECT * FROM country WHERE country='{random_country}'")
     cursor.execute(query)
     for (test) in cursor:   
