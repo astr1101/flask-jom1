@@ -99,7 +99,7 @@ def get_closest_capitals():
     print((sort(smallest)[2][0][1],sort(smallest)[2][0][2], sort(smallest)[2][1]))
     print((sort(smallest)[3][0][1],sort(smallest)[3][0][2], sort(smallest)[3][1]))
     print((sort(smallest)[4][0][1],sort(smallest)[4][0][2], sort(smallest)[4][1]))
-    return (jsonify(sort(smallest)))
+    return (jsonify(sort(smallest)[:5]))
 
 
 
