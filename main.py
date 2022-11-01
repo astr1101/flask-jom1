@@ -103,12 +103,13 @@ def get_closest_capitals():
     #print((sort(smallest)[2][0][1],sort(smallest)[2][0][2], sort(smallest)[2][1]))
     #print((sort(smallest)[3][0][1],sort(smallest)[3][0][2], sort(smallest)[3][1]))
     #print((sort(smallest)[4][0][1],sort(smallest)[4][0][2], sort(smallest)[4][1]))
+    
+    sorted_list=sort(smallest)[:num_results])
     query = (f"SELECT * FROM country WHERE country='{random_country}'")
     cursor.execute(query)
     for (test) in cursor:   
-        smallest.insert(0,(test[1],test[2]))
-    print(sort(smallest)[:num_results])
-    return (jsonify(sort(smallest)[:num_results]))
+       sorted_list.insert(0,(test[1],test[2]))
+    return (jsonify(sorted_list))
 
 
 
