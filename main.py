@@ -1,6 +1,8 @@
 from flask import Flask, current_app, jsonify, request, render_template
 import os
-
+import mysql.connector
+import random
+from math import radians, cos, sin, asin, sqrt
 app = Flask(__name__)
 
 
@@ -10,7 +12,7 @@ def index():
 
 @app.route('/capitals')
 def get_capitals():
-    import mysql.connector
+    
     list_of_countries=[]
 
     cnx = mysql.connector.connect(user='root', database='railway', host='containers-us-west-30.railway.app', password='uRmUBE9EPeW2Q73NQWgm', port='6811')
@@ -30,7 +32,7 @@ def get_closest_capitals():
 #/closest_capitals/?country=&results=1
     the_country=request.args.get("country", default="", type=str)
     num_results=request.args.get("results", default="", type=str)
-    import mysql.connector
+    
     list_of_countries=[]
 
     cnx = mysql.connector.connect(user='root', database='railway', host='containers-us-west-30.railway.app', password='uRmUBE9EPeW2Q73NQWgm', port='6811')
@@ -41,8 +43,7 @@ def get_closest_capitals():
     # function to sort the tuple     
     def sort(list_of_tuples):  
         return sorted(list_of_tuples, key = closest)  
-    import random
-    from math import radians, cos, sin, asin, sqrt
+    
     def distance(lat1, lat2, lon1, lon2):
 
         # The math module contains a function named
@@ -65,7 +66,7 @@ def get_closest_capitals():
         # calculate the result
         return(c * r)
 
-    import random
+    
     query = ("SELECT * FROM country")
     cursor.execute(query) 
     for (test) in cursor:
