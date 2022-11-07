@@ -38,6 +38,109 @@ def distance(lat1, lat2, lon1, lon2):
 @app.route('/')
 def index():
     return jsonify({"Geography Game API": "Welcome!"})
+@app.route('/closest_state_capitals')
+def get_closest_state_capitals():
+    the_country=request.args.get("state", default="", type=str)
+    num_results=request.args.get("results", default="", type=str)
+    print(f"The Country is {the_country}")
+    if(num_results==""):
+        num_results=5
+    if(num_results!=""):
+        num_results=int(num_results)
+    list_of_states=[]
+
+    cnx = mysql.connector.connect(user='root', database='railway', host='containers-us-west-30.railway.app', password='uRmUBE9EPeW2Q73NQWgm', port='6811')
+    cursor = cnx.cursor()
+
+    query = ("SELECT * FROM states")
+    cursor.execute(query)
+    for (test) in cursor:
+      list_of_states.append(test[1])
+    if(the_country!=""):
+        random_country=the_country
+    if(the_country==""):
+        random_country=random.choice(list_of_states)
+    query = (f"SELECT * FROM states WHERE state='{random_country}'")
+    cursor.execute(query)
+    country_from=None
+    country_from_lat=None
+    country_from_lon=None
+    country_to=None
+    country_to_lat=None
+    country_to_lon=None
+    for (test) in cursor:
+      country_from_lat=test[3]
+      country_from_lon=test[4]
+      print(test)
+    query = (f"SELECT * FROM states WHERE state!='{random_country}'")
+    smallest=[]
+    cursor.execute(query)
+    for (test) in cursor:
+      country_to_lat=test[3]
+      country_to_lon=test[4]
+      the_distance=distance(float(country_from_lat), float(country_to_lat), float(country_from_lon), float(country_to_lon))
+      smallest.append((test,the_distance))
+    sorted_list=sort(smallest)[:num_results]
+    query = (f"SELECT * FROM states WHERE state='{random_country}'")
+    cursor.execute(query)
+    for (test) in cursor:
+       sorted_list.insert(0,(test[1],test[2]))
+    return (jsonify(sorted_list))
+
+@app.route('/states')
+def states():
+    list_of_states=[]
+    cnx = mysql.connector.connect(user='root', database='railway', host='containers-us-west-30.railway.app', password='uRmUBE9EPeW2Q73NQWgm', port='6811')
+    cursor = cnx.cursor()
+    query = ("SELECT * FROM states")
+    cursor.execute(query)
+    for (test) in cursor:
+      list_of_states.append(test[1])
+    return(jsonify(sorted(list_of_states)))
+
+@app.route('/state_capitals')
+def state_capitals():
+    list_of_states=[]
+    cnx = mysql.connector.connect(user='root', database='railway', host='containers-us-west-30.railway.app', password='uRmUBE9EPeW2Q73NQWgm', port='6811')
+    cursor = cnx.cursor()
+    query = ("SELECT * FROM states")
+    cursor.execute(query)
+    for (test) in cursor:
+      list_of_states.append(test[2])
+    return(jsonify(sorted(list_of_states)))
+@app.route('/state_capitals_by_lat')
+#-90 to 90
+def state_capitals_by_lat():
+    lat_from=request.args.get("lat_from", default="", type=str)
+    lat_to=request.args.get("lat_to", default="", type=str)
+    if(float(lat_from)<-90.0 or float(lat_to)>90.0):
+        return(jsonify("Latitude outside range. Can only be between -90 and 90"))
+    list_of_states=[]
+    cnx = mysql.connector.connect(user='root', database='railway', host='containers-us-west-30.railway.app', password='uRmUBE9EPeW2Q73NQWgm', port='6811')
+    cursor = cnx.cursor()
+    query = ("SELECT * FROM states")
+    cursor.execute(query)
+    for (test) in cursor:
+      if(float(lat_from)<=float(test[3])<=float(lat_to)):
+          list_of_states.append(test)
+    return(jsonify(sorted(list_of_states)))
+@app.route('/state_capitals_by_lon')
+#-180 to 180
+def state_capitals_by_lon():
+    lon_from=request.args.get("lon_from", default="", type=str)
+    lon_to=request.args.get("lon_to", default="", type=str)
+    if(float(lon_from)<-180.0 or float(lon_to)>180.0):
+        return(jsonify("Longitude outside range. Can only be between -180 and 180"))
+    else:
+        list_of_states=[]
+        cnx = mysql.connector.connect(user='root', database='railway', host='containers-us-west-30.railway.app', password='uRmUBE9EPeW2Q73NQWgm', port='6811')
+        cursor = cnx.cursor()
+        query = ("SELECT * FROM states")
+        cursor.execute(query)
+        for (test) in cursor:
+          if(float(lon_from)<=float(test[4])<=float(lon_to)):
+              list_of_states.append(test)
+        return(jsonify(sorted(list_of_states)))
 
 @app.route('/capitals_by_lat')
 #-90 to 90
